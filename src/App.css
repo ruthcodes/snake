@@ -1,0 +1,26 @@
+.App {
+  text-align: center;
+}
+
+.cell {
+  height: 10px;
+  width: 10px;
+  border: 1px solid black;
+  float: left;
+  margin: 0;
+
+}
+
+.grid{
+  width: 300px;
+  margin: 0 auto;
+}
+
+
+[data-value="empty"]{
+  background: white;
+}
+
+[data-value="snake"]{
+  background: black;
+}
