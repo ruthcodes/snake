@@ -82,64 +82,45 @@ class App extends Component {
   moveSnake = (direction) => {
     // get array of current snake positions
     let snakePosition = [...this.state.snakePosition];
-    console.log("starting move")
-
-
-    let gameBoard = [...this.state.gameBoard];
     // get position of head
     let snakeHeadRow = snakePosition[0][0]
     let snakeHeadCol = snakePosition[0][1]
     // make empty array to store the snakes new position after successful move
     let snakeNextPosition = [];
-    //let incrementRow = 0;
-    //let incrementCol = 0;
-
+    // decide which array index of the snake needs incrememnting dependent on direction
     switch(direction) {
       case "right":
           snakeNextPosition = [snakeHeadRow, snakeHeadCol+1]
-          //incrementRow = 0
-          //incrementCol = 1
           break;
       case "left":
           snakeNextPosition = [snakeHeadRow, snakeHeadCol-1]
-          //incrementRow = 0
-          //incrementCol = -2
           break;
       case "up":
           snakeNextPosition = [snakeHeadRow-1, snakeHeadCol]
-          //incrementRow = -2
-          //incrementCol = 0
           break;
       case "down":
           snakeNextPosition = [snakeHeadRow+1, snakeHeadCol]
-          //incrementRow = 1
-          //incrementCol = 0
           break;
       default:
           snakeNextPosition = [snakeHeadRow, snakeHeadCol]
     }
 
-    // if the snakes new head position is valid, delete the last cell from the snakes old position
+    // if the snakes new head position is valid
     if (this.validMove(snakeNextPosition[0], snakeNextPosition[1])){
       //delete the tail
-      snakePosition.pop()
+      let snakeTail = snakePosition.pop()
       //then add the new head to the front
       snakePosition.unshift(snakeNextPosition)
 
-      // then loop through the old positions incrememnting each by one depending on direction
-      /*snakePosition = snakePosition.map((positionArr) => {
-        positionArr[0] = positionArr[0] + incrementRow
-        positionArr[1] = positionArr[1] + incrementCol
-        return positionArr
-      })*/
-
-      console.log(JSON.parse(JSON.stringify(snakePosition.slice())));
-
-
-      // figure out how to update gameBoard based on new snake array
-
-
-      // finally update the snakePosition and gameBoard states with the new values
+      // loop through snake array
+      let gameBoard = [...this.state.gameBoard];
+      for (let i = 0; i < snakePosition.length-1; i++){
+        //and update equivalent positions on the gameBoard
+        gameBoard[snakePosition[i][0]][snakePosition[i][1]] = "snake";
+      }
+      // set the previous tail position on the board to empty
+      gameBoard[snakeTail[0]][snakeTail[1]] = "empty"
+      // update the snakePosition and gameBoard states with the new values
       this.setState({
         snakePosition: snakePosition,
         gameBoard: gameBoard,
