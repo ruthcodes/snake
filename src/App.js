@@ -114,10 +114,10 @@ class App extends Component {
 
       // loop through snake array
       let gameBoard = [...this.state.gameBoard];
-      for (let i = 0; i < snakePosition.length-1; i++){
+      snakePosition.forEach((position, i) => {
         //and update equivalent positions on the gameBoard
-        gameBoard[snakePosition[i][0]][snakePosition[i][1]] = "snake";
-      }
+        gameBoard[position[0]][position[1]] = "snake";
+      })
       // set the previous tail position on the board to empty
       gameBoard[snakeTail[0]][snakeTail[1]] = "empty"
       // update the snakePosition and gameBoard states with the new values
