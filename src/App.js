@@ -12,6 +12,11 @@ class App extends Component {
   }
 
   componentDidMount(){
+    this.setUpBoard()
+      .then(this.placeStartingSnake)
+  }
+
+  setUpBoard = async () => {
     let gameBoard =[];
     let rows = [];
     //loop for height
@@ -50,7 +55,6 @@ class App extends Component {
       gameBoard: gameBoard,
       snakePosition: snakePosition
     })
-
   }
 
   validMove = (row, col) => {
@@ -140,7 +144,6 @@ class App extends Component {
     return (
       <div className="App">
         <Grid gameBoard={this.state.gameBoard}/>
-        <button onClick={this.placeStartingSnake}>Add snake</button>
         <button onClick={this.startGame}>Start</button>
       </div>
     );
