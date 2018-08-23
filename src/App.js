@@ -2,19 +2,21 @@ import React, { Component } from 'react';
 import './App.css';
 
 import Grid from "./Grid"
+import Score from "./Score"
 
 class App extends Component {
   state = {
     gameBoard: [],
-    snakeLength: 5,
     directionQueue: ["right"],
     snakePosition: [],
+    score: 0,
   }
 
   componentDidMount(){
     window.addEventListener('keydown', this.handleKeyDown);
     this.setUpBoard()
       .then(this.placeStartingSnake)
+      .then(this.placeFood)
   }
 
   componentWillUnmount(){
@@ -43,13 +45,14 @@ class App extends Component {
     })
   }
 
-  placeStartingSnake = () => {
+  placeStartingSnake = async () => {
     //copy the current state gameBoard
     let gameBoard = [...this.state.gameBoard]
     let centralCell = 12;
     let snakePosition = [];
+    let snakeStartingLength = 5;
     //starting from central cell (column 12) running snakeLen times
-    for (let i = centralCell; i > (centralCell - this.state.snakeLength); i--){
+    for (let i = centralCell; i > (centralCell - snakeStartingLength); i--){
       //set cell value to "snake"
       gameBoard[13][i] = "snake";
       // add that cell to the snakes position array to be updated in state
@@ -60,6 +63,27 @@ class App extends Component {
       gameBoard: gameBoard,
       snakePosition: snakePosition
     })
+  }
+
+  placeFood = () => {
+    console.log("placing food")
+    //choose a random spot on the gameBoard
+    let gameBoard = [...this.state.gameBoard]
+    // choose a random number for the row (0-25) and col (0-24) within the bounds
+    let randomRow = Math.floor(Math.random() * (25 - 0 + 1)) + 0;
+    let randomCol = Math.floor(Math.random() * (24 - 0 + 1)) + 0;
+    // if valid, add the food, otherwise call function again
+    if(gameBoard[randomRow][randomCol] === "empty"){
+      gameBoard[randomRow][randomCol] = "food"
+      this.setState({
+        gameBoard: gameBoard,
+
+      })
+    } else {
+      this.placeFood()
+    }
+    // if it is empty, change value to 'food'
+    // if not empty,rechoose
   }
 
   validMove = (row, col) => {
@@ -166,26 +190,36 @@ class App extends Component {
       default:
           snakeNextPosition = [snakeHeadRow, snakeHeadCol]
     }
+    let gameBoard = [...this.state.gameBoard];
 
     // if the snakes new head position is valid
     if (this.validMove(snakeNextPosition[0], snakeNextPosition[1])){
-      //delete the tail
-      let snakeTail = snakePosition.pop()
+      //if snake not eating delete the tail,
+      //otherwise keep it so snake grows while still moving forwards
+      if (gameBoard[snakeNextPosition[0]][snakeNextPosition[1]] !== "food"){
+        //delete the tail
+        let snakeTail = snakePosition.pop()
+        // set the previous tail position on the board to empty
+        gameBoard[snakeTail[0]][snakeTail[1]] = "empty"
+      } else {
+        //place food if snake eats current food
+        this.placeFood()
+        //add 1 to score
+        this.setState({
+          score: this.state.score + 1,
+        })
+      }
       //then add the new head to the front
       snakePosition.unshift(snakeNextPosition)
       //check if snake has run into itself -maybe move this?
       this.collidedWithSelf(snakeNextPosition[0], snakeNextPosition[1])
 
       // loop through snake array
-      let gameBoard = [...this.state.gameBoard];
       snakePosition.forEach((position, i) => {
         //and update equivalent positions on the gameBoard
         gameBoard[position[0]][position[1]] = "snake";
       })
-      // set the previous tail position on the board to empty
-      gameBoard[snakeTail[0]][snakeTail[1]] = "empty"
       // update the snakePosition and gameBoard states with the new values
-
       this.setState({
         snakePosition: snakePosition,
         gameBoard: gameBoard,
@@ -208,6 +242,7 @@ class App extends Component {
       <div className="App">
         <Grid gameBoard={this.state.gameBoard}/>
         <button onClick={this.startGame}>Start</button>
+        <Score score={this.state.score}/>
       </div>
     );
   }

@@ -24,3 +24,7 @@
 [data-value="snake"]{
   background: black;
 }
+
+[data-value="food"]{
+  background: red;
+}
