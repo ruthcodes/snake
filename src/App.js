@@ -7,7 +7,7 @@ class App extends Component {
   state = {
     gameBoard: [],
     snakeLength: 5,
-    currentDirection: "right",
+    directionQueue: ["right"],
     snakePosition: [],
   }
 
@@ -20,6 +20,7 @@ class App extends Component {
   componentWillUnmount(){
     window.removeEventListener('keydown', this.handleKeyDown);
     clearInterval(this.timerID);
+    clearInterval(this.delayTimer);
   }
 
   setUpBoard = async () => {
@@ -51,11 +52,9 @@ class App extends Component {
     for (let i = centralCell; i > (centralCell - this.state.snakeLength); i--){
       //set cell value to "snake"
       gameBoard[13][i] = "snake";
-      console.log(i)
       // add that cell to the snakes position array to be updated in state
       snakePosition.push([13, i])
     }
-      console.log(JSON.parse(JSON.stringify(snakePosition.slice())));
 
     this.setState({
       gameBoard: gameBoard,
@@ -74,8 +73,9 @@ class App extends Component {
 
   handleKeyDown = (e) => {
     e.preventDefault();
+    let queue = [...this.state.directionQueue]
     let direction;
-    // set direction variable based on key pressed
+    //take direction entered and add it to queue
     switch(e.keyCode) {
       case 37:
       case 65:
@@ -94,25 +94,36 @@ class App extends Component {
           direction = "down"
           break;
       default:
-          direction = this.state.currentDirection
+          direction = this.state.directionQueue[0]
     }
-    // prevent user changing direction on the same axis they are currently on
-    let horizontal = ["left", "right"]
-    let vertical = ["up", "down"]
-    // if new direction is horizontal and so is the current, ignore the input. Same for vertical.
-    if (
-      (horizontal.includes(direction) && horizontal.includes(this.state.currentDirection)) ||
-      (vertical.includes(direction) && vertical.includes(this.state.currentDirection))
-    ){
-      console.log("invalid choice, keep going same way")
-      direction = this.state.currentDirection
-    }
-    console.log("direction: " + this.state.currentDirection)
-    console.log("setting direction to : " + direction)
-    this.setState({
-      currentDirection: direction,
-    })
+    queue.push(direction)
 
+    this.setState({
+      directionQueue: queue,
+    })
+  }
+
+  traverseDirectionQueue = () => {
+    let queue = [...this.state.directionQueue]
+    if (queue.length > 1){
+      // prevent user changing direction on the same axis they are currently on
+      let horizontal = ["left", "right"]
+      let vertical = ["up", "down"]
+      // if new direction is horizontal and so is the current, ignore the input. Same for vertical.
+      if (
+        (horizontal.includes(queue[0]) && horizontal.includes(queue[1])) ||
+        (vertical.includes(queue[0]) && vertical.includes(queue[1]))
+      ){
+        //remove the newly input direction and reset direction state
+        queue.pop()
+      } else {
+        // remove the first item, so new input is now first
+        queue.shift()
+      }
+    }
+    this.setState({
+      directionQueue: queue,
+    })
   }
 
   collidedWithSelf = (row, col) => {
@@ -128,19 +139,18 @@ class App extends Component {
     console.log("died!")
   }
 
-
   moveSnake = () => {
-
+    // update the direction before moving snake
+    this.traverseDirectionQueue()
     // get array of current snake positions
     let snakePosition = [...this.state.snakePosition];
-
     // get position of head
     let snakeHeadRow = snakePosition[0][0]
     let snakeHeadCol = snakePosition[0][1]
     // make empty array to store the snakes new position after successful move
     let snakeNextPosition = [];
     // decide which array index of the snake needs incrememnting dependent on direction
-    switch(this.state.currentDirection) {
+    switch(this.state.directionQueue[0]) {
       case "right":
           snakeNextPosition = [snakeHeadRow, snakeHeadCol+1]
           break;
@@ -185,7 +195,7 @@ class App extends Component {
 
   }
 
-  startGame = () =>{
+  startGame = () => {
     this.timerID = setInterval(() => {
       this.moveSnake()
     }, 100)
