@@ -109,15 +109,15 @@ class App extends Component {
       // prevent user changing direction on the same axis they are currently on
       let horizontal = ["left", "right"]
       let vertical = ["up", "down"]
-      // if new direction is horizontal and so is the current, ignore the input. Same for vertical.
+      // if new direction is horizontal and so is the current (same for vertical)
       if (
         (horizontal.includes(queue[0]) && horizontal.includes(queue[1])) ||
         (vertical.includes(queue[0]) && vertical.includes(queue[1]))
       ){
-        //remove the newly input direction and reset direction state
+        // remove the new input to reset direction to whatever it was previously
         queue.pop()
       } else {
-        // remove the first item, so new input is now first
+        // if new move valid, remove the first item, so new input is now first
         queue.shift()
       }
     }
@@ -173,6 +173,8 @@ class App extends Component {
       let snakeTail = snakePosition.pop()
       //then add the new head to the front
       snakePosition.unshift(snakeNextPosition)
+      //check if snake has run into itself -maybe move this?
+      this.collidedWithSelf(snakeNextPosition[0], snakeNextPosition[1])
 
       // loop through snake array
       let gameBoard = [...this.state.gameBoard];
