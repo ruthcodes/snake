@@ -12,8 +12,14 @@ class App extends Component {
   }
 
   componentDidMount(){
+    window.addEventListener('keydown', this.handleKeyDown);
     this.setUpBoard()
       .then(this.placeStartingSnake)
+  }
+
+  componentWillUnmount(){
+    window.removeEventListener('keydown', this.handleKeyDown);
+    clearInterval(this.timerID);
   }
 
   setUpBoard = async () => {
@@ -66,6 +72,49 @@ class App extends Component {
     return false;
   }
 
+  handleKeyDown = (e) => {
+    e.preventDefault();
+    let direction;
+    // set direction variable based on key pressed
+    switch(e.keyCode) {
+      case 37:
+      case 65:
+          direction = "left"
+          break;
+      case 39:
+      case 68:
+          direction = "right"
+          break;
+      case 38:
+      case 87:
+          direction = "up"
+          break;
+      case 40:
+      case 83:
+          direction = "down"
+          break;
+      default:
+          direction = this.state.currentDirection
+    }
+    // prevent user changing direction on the same axis they are currently on
+    let horizontal = ["left", "right"]
+    let vertical = ["up", "down"]
+    // if new direction is horizontal and so is the current, ignore the input. Same for vertical.
+    if (
+      (horizontal.includes(direction) && horizontal.includes(this.state.currentDirection)) ||
+      (vertical.includes(direction) && vertical.includes(this.state.currentDirection))
+    ){
+      console.log("invalid choice, keep going same way")
+      direction = this.state.currentDirection
+    }
+    console.log("direction: " + this.state.currentDirection)
+    console.log("setting direction to : " + direction)
+    this.setState({
+      currentDirection: direction,
+    })
+
+  }
+
   collidedWithSelf = (row, col) => {
     let gameBoard = [...this.state.gameBoard];
     if (gameBoard[row][col] === "snake"){
@@ -74,25 +123,24 @@ class App extends Component {
   }
 
   playerHasDied = () => {
+    clearInterval(this.timerID);
+    clearInterval(this.delayTimer);
     console.log("died!")
   }
 
-  changeDirection = (direction) =>{
-    this.setState({
-      currentDirection: direction,
-    })
-  }
 
-  moveSnake = (direction) => {
+  moveSnake = () => {
+
     // get array of current snake positions
     let snakePosition = [...this.state.snakePosition];
+
     // get position of head
     let snakeHeadRow = snakePosition[0][0]
     let snakeHeadCol = snakePosition[0][1]
     // make empty array to store the snakes new position after successful move
     let snakeNextPosition = [];
     // decide which array index of the snake needs incrememnting dependent on direction
-    switch(direction) {
+    switch(this.state.currentDirection) {
       case "right":
           snakeNextPosition = [snakeHeadRow, snakeHeadCol+1]
           break;
@@ -125,6 +173,7 @@ class App extends Component {
       // set the previous tail position on the board to empty
       gameBoard[snakeTail[0]][snakeTail[1]] = "empty"
       // update the snakePosition and gameBoard states with the new values
+
       this.setState({
         snakePosition: snakePosition,
         gameBoard: gameBoard,
@@ -137,7 +186,9 @@ class App extends Component {
   }
 
   startGame = () =>{
-    this.moveSnake("right")
+    this.timerID = setInterval(() => {
+      this.moveSnake()
+    }, 100)
   }
 
   render() {
