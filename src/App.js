@@ -3,6 +3,8 @@ import './App.css';
 
 import Grid from "./Grid"
 import Score from "./Score"
+import Keyboard from 'simple-keyboard';
+import 'simple-keyboard/build/css/index.css';
 
 class App extends Component {
   state = {
@@ -15,8 +17,30 @@ class App extends Component {
 
   componentDidMount(){
     window.addEventListener('keydown', this.handleKeyDown);
+    this.keyboard = new Keyboard({
+      debug: true,
+      layoutName: this.layoutName,
+      onKeyPress: button => this.onKeyPress(button),
+      newLineOnEnter: true,
+      layout: {
+        'default': [
+          'w',
+          'a s d',
+        ]}
+    });
     this.setUpBoard()
 
+  }
+
+  onKeyPress = button => {
+    let e = new Event('keydown');
+    let keyCode = button.charCodeAt(0);
+    if (keyCode > 90) {  // 90 is keyCode for 'z'
+       keyCode -= 32;
+    }
+    e.keyCode = keyCode
+
+    this.handleKeyDown(e)
   }
 
   componentWillUnmount(){
@@ -35,10 +59,7 @@ class App extends Component {
       score: 0,
       gameRunning: false,
     })
-
     this.setUpBoard()
-
-
   }
 
 
@@ -87,7 +108,6 @@ class App extends Component {
   }
 
   placeFood = () => {
-    console.log("placing food")
     //choose a random spot on the gameBoard
     let gameBoard = [...this.state.gameBoard]
     // choose a random number for the row (0-25) and col (0-24) within the bounds
@@ -117,6 +137,9 @@ class App extends Component {
   }
 
   handleKeyDown = (e) => {
+    if (!this.state.gameRunning && e.keyCode === 32){
+      this.startGame()
+    }
     if(this.state.gameRunning){
       e.preventDefault();
       let queue = [...this.state.directionQueue]
@@ -261,7 +284,6 @@ class App extends Component {
       // if move was invalid
       return this.playerHasDied()
     }
-
   }
 
   startGame = () => {
@@ -275,21 +297,22 @@ class App extends Component {
         this.moveSnake()
       }, 100)
     }
-
-
-
   }
 
   render() {
     return (
       <div className="App">
+        <Score score={this.state.score}/>
         <Grid gameBoard={this.state.gameBoard}/>
-        <div className="buttonsAndScore">
+        <div className="simple-keyboard"></div>
+        <div>
           <button className="buttonControls" onClick={this.startGame}>Start</button>
           <button className="buttonControls" onClick={this.reset}>Reset</button>
-          <Score score={this.state.score}/>
+          <div className="infoText">
+            <p>If you have a keyboard, the WASD or arrow keys can be used to control the snake.</p>
+            <p>Press the spacebar or start button to begin.</p>
+          </div>
         </div>
-
       </div>
     );
   }

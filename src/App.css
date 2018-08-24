@@ -2,6 +2,7 @@ body{
   background: #DAE2F8;  /* fallback for old browsers */
   background: -webkit-linear-gradient(to left, #D6A4A4, #DAE2F8);  /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to left, #D6A4A4, #DAE2F8); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  font-size: 14px;
 }
 
 .App {
@@ -11,16 +12,23 @@ body{
 .cell {
   height: 10px;
   width: 10px;
-
   float: left;
   margin: 0;
 
 }
 
+.infoText{
+  background-color: white;
+  width: 320px;
+  margin: 10px auto 20px;
+  padding: 5px;
+  border-radius: 5px;
+}
+
 .grid{
   width: 250px;
   height: 260px;
-  margin: 60px auto 0px;
+  margin: 0 auto;
   border: 2px solid white;
 }
 
@@ -35,11 +43,20 @@ body{
   background-color: white;
   color: black;
   width: 252px;
-  margin: 0 auto;
+  margin: 40px auto 0px;
   padding: 10px 0px;
   border-radius: 5px;
 }
 
+.simple-keyboard{
+  margin: 0 auto !important;
+  width: 250px !important;
+}
+
+.hg-button{
+  margin: 0 auto;
+  font-size: 14px;
+}
 
 [data-value="empty"]{
   background-color: black;
