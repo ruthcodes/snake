@@ -10,13 +10,13 @@ class App extends Component {
     directionQueue: ["right"],
     snakePosition: [],
     score: 0,
+    gameRunning: false,
   }
 
   componentDidMount(){
     window.addEventListener('keydown', this.handleKeyDown);
     this.setUpBoard()
-      .then(this.placeStartingSnake)
-      .then(this.placeFood)
+
   }
 
   componentWillUnmount(){
@@ -24,6 +24,23 @@ class App extends Component {
     clearInterval(this.timerID);
     clearInterval(this.delayTimer);
   }
+
+  reset = () => {
+    clearInterval(this.timerID);
+    clearInterval(this.delayTimer);
+    this.setState({
+      gameBoard: [],
+      directionQueue: ["right"],
+      snakePosition: [],
+      score: 0,
+      gameRunning: false,
+    })
+
+    this.setUpBoard()
+
+
+  }
+
 
   setUpBoard = async () => {
     let gameBoard =[];
@@ -39,13 +56,17 @@ class App extends Component {
       gameBoard.push(rows)
       // empty the row and start again for the next n row
       rows = []
+
     }
     this.setState({
       gameBoard: gameBoard,
+    }, () =>{
+      this.placeStartingSnake()
     })
+
   }
 
-  placeStartingSnake = async () => {
+  placeStartingSnake = () => {
     //copy the current state gameBoard
     let gameBoard = [...this.state.gameBoard]
     let centralCell = 12;
@@ -96,35 +117,38 @@ class App extends Component {
   }
 
   handleKeyDown = (e) => {
-    e.preventDefault();
-    let queue = [...this.state.directionQueue]
-    let direction;
-    //take direction entered and add it to queue
-    switch(e.keyCode) {
-      case 37:
-      case 65:
-          direction = "left"
-          break;
-      case 39:
-      case 68:
-          direction = "right"
-          break;
-      case 38:
-      case 87:
-          direction = "up"
-          break;
-      case 40:
-      case 83:
-          direction = "down"
-          break;
-      default:
-          direction = this.state.directionQueue[0]
-    }
-    queue.push(direction)
+    if(this.state.gameRunning){
+      e.preventDefault();
+      let queue = [...this.state.directionQueue]
+      let direction;
+      //take direction entered and add it to queue
+      switch(e.keyCode) {
+        case 37:
+        case 65:
+            direction = "left"
+            break;
+        case 39:
+        case 68:
+            direction = "right"
+            break;
+        case 38:
+        case 87:
+            direction = "up"
+            break;
+        case 40:
+        case 83:
+            direction = "down"
+            break;
+        default:
+            direction = this.state.directionQueue[0]
+      }
+      queue.push(direction)
 
-    this.setState({
-      directionQueue: queue,
-    })
+      this.setState({
+        directionQueue: queue,
+      })
+    }
+
   }
 
   traverseDirectionQueue = () => {
@@ -154,13 +178,19 @@ class App extends Component {
     let gameBoard = [...this.state.gameBoard];
     if (gameBoard[row][col] === "snake"){
       this.playerHasDied()
+      return true
     }
+    return false
   }
 
   playerHasDied = () => {
     clearInterval(this.timerID);
     clearInterval(this.delayTimer);
-    console.log("died!")
+    this.setState({
+      gameRunning: false,
+    })
+    alert(`You died! Score: ${this.state.score}`)
+    this.reset()
   }
 
   moveSnake = () => {
@@ -211,8 +241,11 @@ class App extends Component {
       }
       //then add the new head to the front
       snakePosition.unshift(snakeNextPosition)
-      //check if snake has run into itself -maybe move this?
-      this.collidedWithSelf(snakeNextPosition[0], snakeNextPosition[1])
+      //check if snake has run into itself
+      if(this.collidedWithSelf(snakeNextPosition[0], snakeNextPosition[1])){
+        //stop executing rest of function if player has self collided
+        return;
+      }
 
       // loop through snake array
       snakePosition.forEach((position, i) => {
@@ -232,17 +265,31 @@ class App extends Component {
   }
 
   startGame = () => {
-    this.timerID = setInterval(() => {
-      this.moveSnake()
-    }, 100)
+    if(!this.state.gameRunning){
+      console.log("starting game")
+      this.setState({
+        gameRunning: true,
+      })
+      this.placeFood();
+      this.timerID = setInterval(() => {
+        this.moveSnake()
+      }, 100)
+    }
+
+
+
   }
 
   render() {
     return (
       <div className="App">
         <Grid gameBoard={this.state.gameBoard}/>
-        <button onClick={this.startGame}>Start</button>
-        <Score score={this.state.score}/>
+        <div className="buttonsAndScore">
+          <button className="buttonControls" onClick={this.startGame}>Start</button>
+          <button className="buttonControls" onClick={this.reset}>Reset</button>
+          <Score score={this.state.score}/>
+        </div>
+
       </div>
     );
   }
