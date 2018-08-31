@@ -19,6 +19,7 @@ class App extends Component {
   state = {
     gameBoard: [],
     directionQueue: [RIGHT],
+    availableCells: [],
     snakePosition: [],
     score: 0,
     gameRunning: false,
@@ -47,7 +48,6 @@ class App extends Component {
        keyCode -= 32;
     }
     e.keyCode = keyCode
-
     this.handleKeyDown(e)
   }
 
@@ -63,6 +63,7 @@ class App extends Component {
     this.setState({
       gameBoard: [],
       directionQueue: [RIGHT],
+      availableCells: [],
       snakePosition: [],
       score: 0,
       gameRunning: false,
@@ -72,6 +73,7 @@ class App extends Component {
 
 
   setUpBoard = async () => {
+    let available = [];
     let gameBoard =[];
     let rows = [];
     //loop for height
@@ -80,6 +82,8 @@ class App extends Component {
       for (let n = 0; n < 25; n++){
         // put n number of items in an array
         rows.push(EMPTY);
+        //initialise the availableCells state array to all empty
+        available.push([i,n])
       }
       // then push that array (row) to the main board
       gameBoard.push(rows)
@@ -89,6 +93,7 @@ class App extends Component {
     }
     this.setState({
       gameBoard: gameBoard,
+      availableCells: available,
     }, () =>{
       this.placeStartingSnake()
     })
@@ -111,28 +116,18 @@ class App extends Component {
 
     this.setState({
       gameBoard: gameBoard,
-      snakePosition: snakePosition
+      snakePosition: snakePosition,
+    }, () => {
+      this.updateAvailableCells();
     })
   }
 
   placeFood = () => {
-    //choose a random spot on the gameBoard
+    //choose a random spot from the availableCells state array
     let gameBoard = [...this.state.gameBoard]
+    let availableCells = [...this.state.availableCells]
 
-    let availableCells = [];
-
-    //forEach of the rows, columns
-    gameBoard.forEach((row,r) => {
-      row.forEach((col, c) => {
-        //if row/col is empty
-        if (col === EMPTY){
-          //push to a new array as [row,col]
-          availableCells.push([r,c])
-        }
-      })
-    })
-
-    //choose a random array from the new array
+    //choose a random coord from that array
     const randomCell = availableCells[Math.floor(Math.random()*availableCells.length)];
 
     //and set that row/col in the gameboard as food
@@ -233,6 +228,18 @@ class App extends Component {
     this.reset()
   }
 
+  updateAvailableCells = () => {
+    let available = [...this.state.availableCells]
+    let snakePosition = [...this.state.snakePosition]
+    //remove the snake cells from the array of available cells in state
+    available = available.filter(cell => {
+      return !snakePosition.includes(cell)
+    })
+    this.setState({
+      availableCells: available,
+    })
+  }
+
   moveSnake = () => {
     // update the direction before moving snake
     this.traverseDirectionQueue()
@@ -292,10 +299,12 @@ class App extends Component {
         //and update equivalent positions on the gameBoard
         gameBoard[position[0]][position[1]] = SNAKE;
       })
-      // update the snakePosition and gameBoard states with the new values
+      // update the snakePosition, gameBoard then availableCells states with the new values
       this.setState({
         snakePosition: snakePosition,
         gameBoard: gameBoard,
+      }, ()=> {
+        this.updateAvailableCells();
       })
     } else {
       // if move was invalid
