@@ -3,10 +3,12 @@ body{
   background: -webkit-linear-gradient(to left, #D6A4A4, #DAE2F8);  /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to left, #D6A4A4, #DAE2F8); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   font-size: 14px;
+  min-width: 100%;
 }
 
 .App {
   text-align: center;
+  min-width: 100%;
 }
 
 .cell {
@@ -19,7 +21,7 @@ body{
 
 .infoText{
   background-color: white;
-  width: 320px;
+  width: 310px;
   margin: 10px auto 20px;
   padding: 5px;
   border-radius: 5px;
@@ -68,4 +70,17 @@ body{
 
 [data-value="food"]{
   background: white;
+}
+
+@media (max-width:668px){
+  .App{
+    font-size: 12px;
+  }
+  .score{
+    margin-top:15px;
+  }
+
+  .infoText{
+    width: 295px;
+  }
 }

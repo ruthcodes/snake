@@ -29,7 +29,6 @@ class App extends Component {
         ]}
     });
     this.setUpBoard()
-
   }
 
   onKeyPress = button => {
@@ -110,21 +109,30 @@ class App extends Component {
   placeFood = () => {
     //choose a random spot on the gameBoard
     let gameBoard = [...this.state.gameBoard]
-    // choose a random number for the row (0-25) and col (0-24) within the bounds
-    let randomRow = Math.floor(Math.random() * (25 - 0 + 1)) + 0;
-    let randomCol = Math.floor(Math.random() * (24 - 0 + 1)) + 0;
-    // if valid, add the food, otherwise call function again
-    if(gameBoard[randomRow][randomCol] === "empty"){
-      gameBoard[randomRow][randomCol] = "food"
-      this.setState({
-        gameBoard: gameBoard,
 
+    let availableCells = [];
+
+    //forEach of the rows, columns
+    gameBoard.forEach((row,r) => {
+      row.forEach((col, c) => {
+        //if row/col is empty
+        if (col === "empty"){
+          //push to a new array as [row,col]
+          availableCells.push([r,c])
+        }
       })
-    } else {
-      this.placeFood()
-    }
-    // if it is empty, change value to 'food'
-    // if not empty,rechoose
+    })
+
+    //choose a random array from the new array
+    const randomCell = availableCells[Math.floor(Math.random()*availableCells.length)];
+
+    //and set that row/col in the gameboard as food
+    gameBoard[randomCell[0]][randomCell[1]] = "food";
+
+    this.setState({
+      gameBoard: gameBoard,
+    })
+
   }
 
   validMove = (row, col) => {
@@ -137,6 +145,7 @@ class App extends Component {
   }
 
   handleKeyDown = (e) => {
+    // 32 is spacebar
     if (!this.state.gameRunning && e.keyCode === 32){
       this.startGame()
     }
@@ -171,7 +180,6 @@ class App extends Component {
         directionQueue: queue,
       })
     }
-
   }
 
   traverseDirectionQueue = () => {
@@ -288,7 +296,6 @@ class App extends Component {
 
   startGame = () => {
     if(!this.state.gameRunning){
-      console.log("starting game")
       this.setState({
         gameRunning: true,
       })
