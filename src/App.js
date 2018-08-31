@@ -6,10 +6,19 @@ import Score from "./Score"
 import Keyboard from 'simple-keyboard';
 import 'simple-keyboard/build/css/index.css';
 
+//constants
+const EMPTY = "empty";
+const SNAKE = "snake";
+const FOOD = "food";
+const UP = "up";
+const DOWN = "down";
+const LEFT = "left";
+const RIGHT = "right";
+
 class App extends Component {
   state = {
     gameBoard: [],
-    directionQueue: ["right"],
+    directionQueue: [RIGHT],
     snakePosition: [],
     score: 0,
     gameRunning: false,
@@ -53,7 +62,7 @@ class App extends Component {
     clearInterval(this.delayTimer);
     this.setState({
       gameBoard: [],
-      directionQueue: ["right"],
+      directionQueue: [RIGHT],
       snakePosition: [],
       score: 0,
       gameRunning: false,
@@ -70,7 +79,7 @@ class App extends Component {
       //loop for width
       for (let n = 0; n < 25; n++){
         // put n number of items in an array
-        rows.push("empty");
+        rows.push(EMPTY);
       }
       // then push that array (row) to the main board
       gameBoard.push(rows)
@@ -95,7 +104,7 @@ class App extends Component {
     //starting from central cell (column 12) running snakeLen times
     for (let i = centralCell; i > (centralCell - snakeStartingLength); i--){
       //set cell value to "snake"
-      gameBoard[13][i] = "snake";
+      gameBoard[13][i] = SNAKE;
       // add that cell to the snakes position array to be updated in state
       snakePosition.push([13, i])
     }
@@ -116,7 +125,7 @@ class App extends Component {
     gameBoard.forEach((row,r) => {
       row.forEach((col, c) => {
         //if row/col is empty
-        if (col === "empty"){
+        if (col === EMPTY){
           //push to a new array as [row,col]
           availableCells.push([r,c])
         }
@@ -127,7 +136,7 @@ class App extends Component {
     const randomCell = availableCells[Math.floor(Math.random()*availableCells.length)];
 
     //and set that row/col in the gameboard as food
-    gameBoard[randomCell[0]][randomCell[1]] = "food";
+    gameBoard[randomCell[0]][randomCell[1]] = FOOD;
 
     this.setState({
       gameBoard: gameBoard,
@@ -157,19 +166,19 @@ class App extends Component {
       switch(e.keyCode) {
         case 37:
         case 65:
-            direction = "left"
+            direction = LEFT
             break;
         case 39:
         case 68:
-            direction = "right"
+            direction = RIGHT
             break;
         case 38:
         case 87:
-            direction = "up"
+            direction = UP
             break;
         case 40:
         case 83:
-            direction = "down"
+            direction = DOWN
             break;
         default:
             direction = this.state.directionQueue[0]
@@ -186,8 +195,8 @@ class App extends Component {
     let queue = [...this.state.directionQueue]
     if (queue.length > 1){
       // prevent user changing direction on the same axis they are currently on
-      let horizontal = ["left", "right"]
-      let vertical = ["up", "down"]
+      let horizontal = [LEFT, RIGHT]
+      let vertical = [UP, DOWN]
       // if new direction is horizontal and so is the current (same for vertical)
       if (
         (horizontal.includes(queue[0]) && horizontal.includes(queue[1])) ||
@@ -207,7 +216,7 @@ class App extends Component {
 
   collidedWithSelf = (row, col) => {
     let gameBoard = [...this.state.gameBoard];
-    if (gameBoard[row][col] === "snake"){
+    if (gameBoard[row][col] === SNAKE){
       this.playerHasDied()
       return true
     }
@@ -257,11 +266,11 @@ class App extends Component {
     if (this.validMove(snakeNextPosition[0], snakeNextPosition[1])){
       //if snake not eating delete the tail,
       //otherwise keep it so snake grows while still moving forwards
-      if (gameBoard[snakeNextPosition[0]][snakeNextPosition[1]] !== "food"){
+      if (gameBoard[snakeNextPosition[0]][snakeNextPosition[1]] !== FOOD){
         //delete the tail
         let snakeTail = snakePosition.pop()
         // set the previous tail position on the board to empty
-        gameBoard[snakeTail[0]][snakeTail[1]] = "empty"
+        gameBoard[snakeTail[0]][snakeTail[1]] = EMPTY;
       } else {
         //place food if snake eats current food
         this.placeFood()
@@ -281,7 +290,7 @@ class App extends Component {
       // loop through snake array
       snakePosition.forEach((position, i) => {
         //and update equivalent positions on the gameBoard
-        gameBoard[position[0]][position[1]] = "snake";
+        gameBoard[position[0]][position[1]] = SNAKE;
       })
       // update the snakePosition and gameBoard states with the new values
       this.setState({
