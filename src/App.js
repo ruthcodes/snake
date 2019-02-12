@@ -27,7 +27,7 @@ class App extends Component {
   componentDidMount(){
     window.addEventListener('keydown', this.handleKeyDown);
     this.keyboard = new Keyboard({
-      debug: true,
+      debug: false,
       layoutName: this.layoutName,
       onKeyPress: button => this.onKeyPress(button),
       newLineOnEnter: true,
@@ -133,9 +133,6 @@ class App extends Component {
     const randomCell = availableCells[Math.floor(Math.random()*availableCells.length)];
     //and set that row/col in the gameboard as food
     gameBoard[randomCell[0]][randomCell[1]] = FOOD;
-
-    console.log("placing food at ", randomCell[0],randomCell[1])
-    console.table(this.state.snakePosition)
 
     this.setState({
       gameBoard: gameBoard,

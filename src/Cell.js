@@ -1,14 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-export default class Cell extends Component{
-  handleClick = (e) => {
-    console.log(e.target.getAttribute("data-value"))
-    console.log(e.target.getAttribute("data-coords"))
-  }
-
-  render(){
+function Cell(props){
     return (
-      <div className="cell" onClick={this.handleClick} data-value={this.props['data-value']}data-coords={this.props['data-coords']}></div>
+      <div className="cell"  data-value={props['data-value']}data-coords={props['data-coords']}></div>
     )
-  }
 }
+
+export default Cell;

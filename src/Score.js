@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-export default class Score extends Component{
-
-  render(){
+function Score(props){
     return (
-      <div className="score">Score: {this.props.score}</div>
+      <div className="score">Score: {props.score}</div>
     )
-  }
 }
+
+export default Score;
