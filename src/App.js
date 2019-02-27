@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import './App.css';
+import './Phone.css';
 
 import Grid from "./Grid"
-import Score from "./Score"
-import Keyboard from 'simple-keyboard';
-import 'simple-keyboard/build/css/index.css';
+import Score from './Score';
+import PhoneButton from "./PhoneButton"
+
 
 //constants
 const EMPTY = "empty";
@@ -22,32 +23,58 @@ class App extends Component {
     snakePosition: [],
     score: 0,
     gameRunning: false,
+    phoneKeys: [
+      {'main': '1','side':'.'},
+      {'main': '2','side':'abc'},
+      {'main': '3','side':'def'},
+      {'main': '4','side':'ghi'},
+      {'main': '5','side':'jkl'},
+      {'main': '6','side':'mno'},
+      {'main': '7','side':'pqrs'},
+      {'main': '8','side':'tuv'},
+      {'main': '9','side':'wxyz'},
+      {'main': '*','side':'+'},
+      {'main': '0','side':'_'},
+      {'main': '#','side':'^'},
+    ]
   }
 
   componentDidMount(){
     window.addEventListener('keydown', this.handleKeyDown);
-    this.keyboard = new Keyboard({
-      debug: false,
-      layoutName: this.layoutName,
-      onKeyPress: button => this.onKeyPress(button),
-      newLineOnEnter: true,
-      layout: {
-        'default': [
-          'w',
-          'a s d',
-        ]}
-    });
     this.setUpBoard()
   }
 
   onKeyPress = button => {
-    let e = new Event('keydown');
-    let keyCode = button.charCodeAt(0);
-    if (keyCode > 90) {  // 90 is keyCode for 'z'
-       keyCode -= 32;
-    }
-    e.keyCode = keyCode
-    this.handleKeyDown(e)
+
+      let e = new Event('keydown');
+
+      let pressed = button.target.nodeName === "SPAN" ?
+                    button.target.parentElement.dataset.value :
+                    button.target.dataset.value
+
+        console.log(pressed)
+      let keyCode;
+      switch(pressed) {
+        case '4':
+            keyCode = 37
+            break;
+        case '6':
+            keyCode = 39
+            break;
+        case '2':
+            keyCode = 38
+            break;
+        case '8':
+            keyCode = 40
+            break;
+        default:
+          keyCode = null;
+      }
+      if (keyCode) {
+        e.keyCode = keyCode;
+        this.handleKeyDown(e);
+      }
+
   }
 
   componentWillUnmount(){
@@ -149,6 +176,7 @@ class App extends Component {
   }
 
   handleKeyDown = (e) => {
+    console.log(e)
     // 32 is spacebar
     if (!this.state.gameRunning && e.keyCode === 32){
       this.startGame()
@@ -313,15 +341,27 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Score score={this.state.score}/>
-        <Grid gameBoard={this.state.gameBoard}/>
-        <div className="simple-keyboard"></div>
-        <div>
-          <button className="buttonControls" onClick={this.startGame}>Start</button>
-          <button className="buttonControls" onClick={this.reset}>Reset</button>
-          <div className="infoText">
-            <p>If you have a keyboard, the WASD or arrow keys can be used to control the snake.</p>
-            <p>Press the spacebar or start button to begin.</p>
+        <div className="container">
+          <div className="phone-body">
+            <div className="phone-top">
+              <div className="phone-screen-border">
+                <div className="phone-speaker"></div>
+                <Grid gameBoard={this.state.gameBoard}/>
+                <div className="phone-controls">
+                  <div className="phone-control-button" onClick={this.startGame}>Start</div>
+                  <div className="phone-control-button" onClick={this.reset}>Reset</div>
+                </div>
+              </div>
+            </div>
+            <div className="phone-bottom">
+              <div className="phone-buttons">
+                {
+                  this.state.phoneKeys.map((key,i) => {
+                    return <PhoneButton key={i} handleClick={this.onKeyPress} data-value={key.main} side={key.side} />
+                  })
+                }
+              </div>
+            </div>
           </div>
         </div>
       </div>

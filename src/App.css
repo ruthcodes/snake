@@ -3,20 +3,22 @@ body{
   background: -webkit-linear-gradient(to left, #D6A4A4, #DAE2F8);  /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to left, #D6A4A4, #DAE2F8); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   font-size: 14px;
-  min-width: 100%;
+  min-width: 100vw;
 }
 
 .App {
   text-align: center;
   min-width: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
 }
 
 .cell {
-  height: 10px;
-  width: 10px;
+  height: 5.5px;
+  width: 5.5px;
   float: left;
   margin: 0;
-
 }
 
 .infoText{
@@ -28,10 +30,11 @@ body{
 }
 
 .grid{
-  width: 250px;
-  height: 260px;
-  margin: 0 auto;
-  border: 2px solid white;
+  width: 137.5px;
+  position: absolute;
+  top: 20%;
+  left:16%;
+  border: 1px solid black;
 }
 
 .buttonControls{
@@ -45,7 +48,6 @@ body{
   background-color: white;
   color: black;
   width: 252px;
-  margin: 40px auto 0px;
   padding: 10px 0px;
   border-radius: 5px;
 }
@@ -61,15 +63,15 @@ body{
 }
 
 [data-value="empty"]{
-  background-color: black;
+  background-color: #74786C;
 }
 
 [data-value="snake"]{
-  background: white;
+  background: #272A23;
 }
 
 [data-value="food"]{
-  background: white;
+  background: #272A23;
 }
 
 @media (max-width:668px){
