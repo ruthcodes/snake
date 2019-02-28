@@ -6,6 +6,7 @@
     "react": "^16.4.2",
     "react-app-polyfill": "^0.2.1",
     "react-dom": "^16.4.2",
+    "react-responsive-modal": "^3.6.0",
     "react-scripts": "^2.1.5"
   },
   "scripts": {

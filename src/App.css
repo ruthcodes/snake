@@ -47,3 +47,17 @@ body{
 [data-value="snake"], [data-value="food"]{
   background: #272A23;
 }
+
+.info-modal {
+  margin-top: 20px;
+}
+
+.info-modal button {
+  background: rgb(226,231,222);
+  background: -webkit-linear-gradient(top, rgba(226,231,222,1) 0%, rgba(186,190,182,1) 20%, rgba(133,135,135,1) 100%);
+  background: -o-linear-gradient(top, rgba(226,231,222,1) 0%, rgba(186,190,182,1) 20%, rgba(133,135,135,1) 100%);
+  background: linear-gradient(180deg, rgba(226,231,222,1) 0%, rgba(186,190,182,1) 20%, rgba(133,135,135,1) 100%);
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 10px;
+}

@@ -6,6 +6,7 @@ import Grid from "./Grid";
 import Score from './Score';
 import Clock from './Clock';
 import PhoneButton from "./PhoneButton";
+import Modal from 'react-responsive-modal';
 
 //constants
 const EMPTY = "empty";
@@ -36,13 +37,22 @@ class App extends Component {
       {'main': '*','side':'+'},
       {'main': '0','side':'_'},
       {'main': '#','side':'^'},
-    ]
+    ],
+    open: false,
   }
 
   componentDidMount(){
     window.addEventListener('keydown', this.handleKeyDown);
     this.setUpBoard()
   }
+
+  onOpenModal = () => {
+    this.setState({ open: true });
+  };
+
+  onCloseModal = () => {
+    this.setState({ open: false });
+  };
 
   // Handler for phone keypad
   onButtonClick = button => {
@@ -299,6 +309,7 @@ class App extends Component {
   }
 
   render() {
+    const { open } = this.state;
     return (
       <div className="App">
         <div className="container">
@@ -327,6 +338,14 @@ class App extends Component {
               </div>
             </div>
           </div>
+        </div>
+        <div className="info-modal">
+          <button onClick={this.onOpenModal}>INFO</button>
+          <Modal open={open} onClose={this.onCloseModal} center>
+            <h2>Controls</h2>
+            <p>If you have a keyboard, the WASD or arrow keys can be used to control the snake.</p>
+            <p>Press the spacebar or start button to begin.</p>
+          </Modal>
         </div>
       </div>
     );
