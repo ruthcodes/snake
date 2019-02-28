@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Share+Tech+Mono');
+@import url('https://fonts.googleapis.com/css?family=Dhurjati');
 .container {
   position: relative;
   margin: auto;
@@ -91,10 +91,10 @@
 
 .phone-controls {
   height: 11%;
-  width: 68%;
+  width: 64%;
   position: absolute;
   top: 78%;
-  left: 16.5%;
+  left: 18.5%;
   border-radius: 0% 0% 45% 45% / 22% 22% 55% 55%;
   display: flex;
 }

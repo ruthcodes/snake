@@ -15,8 +15,8 @@ body{
 }
 
 .cell {
-  height: 5.5px;
-  width: 5.5px;
+  height: 5px;
+  width: 5px;
   float: left;
   margin: 0;
 }

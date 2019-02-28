@@ -98,7 +98,7 @@ class App extends Component {
   }
 
 
-  setUpBoard = async () => {
+  setUpBoard = () => {
     let gameBoard =[];
     let rows = [];
     //loop for height
