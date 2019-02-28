@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import './Phone.css';
+import 'custom-event-polyfill';
 
 import Grid from "./Grid";
 import Score from './Score';
@@ -56,7 +57,7 @@ class App extends Component {
 
   // Handler for phone keypad
   onButtonClick = button => {
-      let e = new Event('keydown');
+      let e = new CustomEvent('keydown');
       // ensures click triggers anywhere within the button or its children
       let pressed = button.target.nodeName === "SPAN" ?
                     button.target.parentElement.dataset.value :

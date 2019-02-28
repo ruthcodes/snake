@@ -1,41 +1,11 @@
+import 'react-app-polyfill/ie9';
+import 'babel-polyfill';
+import 'custom-event-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
-
-// Array.includes polyfill from:
-// https://tc39.github.io/ecma262/#sec-array.prototype.includes
-if (!Array.prototype.includes) {
-  Array.includes = function(valueToFind, fromIndex) {
-      if (this == null) {
-        throw new TypeError('"this" is null or not defined');
-      }
-
-      var o = Object(this);
-      var len = o.length >>> 0;
-
-      if (len === 0) {
-        return false;
-      }
-
-      var n = fromIndex | 0;
-      var k = Math.max(n >= 0 ? n : len - Math.abs(n), 0);
-
-      function sameValueZero(x, y) {
-        return x === y || (typeof x === 'number' && typeof y === 'number' && isNaN(x) && isNaN(y));
-      }
-
-      while (k < len) {
-        if (sameValueZero(o[k], valueToFind)) {
-          return true;
-        }
-
-        k++;
-      }
-      return false;
-    }
-  };
 
 ReactDOM.render(<App />, document.getElementById('root'));
 registerServiceWorker();
