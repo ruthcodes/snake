@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import './Phone.css';
-import 'custom-event-polyfill';
+
 
 import Grid from "./Grid";
 import Score from './Score';
