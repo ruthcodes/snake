@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import './App.css';
 import './Phone.css';
 
-import Grid from "./Grid"
+import Grid from "./Grid";
 import Score from './Score';
 import Clock from './Clock';
-import PhoneButton from "./PhoneButton"
+import PhoneButton from "./PhoneButton";
 
 
 //constants
@@ -45,15 +45,12 @@ class App extends Component {
     this.setUpBoard()
   }
 
-  onKeyPress = button => {
-
+  // Handler for
+  onButtonClick = button => {
       let e = new Event('keydown');
-
       let pressed = button.target.nodeName === "SPAN" ?
                     button.target.parentElement.dataset.value :
                     button.target.dataset.value
-
-        console.log(pressed)
       let keyCode;
       switch(pressed) {
         case '4':
@@ -75,7 +72,6 @@ class App extends Component {
         e.keyCode = keyCode;
         this.handleKeyDown(e);
       }
-
   }
 
   componentWillUnmount(){
@@ -362,7 +358,7 @@ class App extends Component {
               <div className="phone-buttons">
                 {
                   this.state.phoneKeys.map((key,i) => {
-                    return <PhoneButton key={i} handleClick={this.onKeyPress} data-value={key.main} side={key.side} />
+                    return <PhoneButton key={i} handleClick={this.onButtonClick} data-value={key.main} side={key.side} />
                   })
                 }
               </div>
