@@ -1,9 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Dhurjati');
+/* Relative positioned parent box for absolute positioned children */
 .container {
   position: relative;
-  margin: auto;
-  width: 200px;
   height: 420px;
+  width: 200px;
+  margin: auto;
   margin-top: 20px;
 }
 
@@ -19,143 +20,187 @@
   position: absolute;
   top: 0%;
   left: 0%;
-  background: rgb(53,57,60);
-  background: linear-gradient(90deg, rgba(53,57,60,1) 0%, rgba(63,70,78,1) 49%, rgba(53,57,60,1) 100%);
   height: 62%;
   width: 100%;
+  background: rgb(53,57,60);
+  background: -webkit-linear-gradient(left, rgba(53,57,60,1) 0%, rgba(63,70,78,1) 49%, rgba(53,57,60,1) 100%);
+  background: -o-linear-gradient(left, rgba(53,57,60,1) 0%, rgba(63,70,78,1) 49%, rgba(53,57,60,1) 100%);
+  background: linear-gradient(90deg, rgba(53,57,60,1) 0%, rgba(63,70,78,1) 49%, rgba(53,57,60,1) 100%);
   border-radius: 18% 18% 0% 0% / 22% 22% 35% 35%;
-  -moz-box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.3);
-  -khtml-box-shadow: 0px -5px 8px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 0px -5px 8px rgba(0, 0, 0, 0.3);
-  box-shadow: 0px -5px 8px rgba(0, 0, 0, 0.3);
+          box-shadow: 0px -5px 8px rgba(0, 0, 0, 0.3);
 }
 
 .phone-bottom {
   position: absolute;
-  top: 62%;
+  top: 61.5%;
   left: 0;
-  background: rgb(53,57,60);
-  background: linear-gradient(90deg, rgba(53,57,60,1) 0%, rgba(63,70,78,1) 49%, rgba(53,57,60,1) 100%);
   height: 40%;
   width: 100%;
+  background: rgb(53,57,60);
+  background: -webkit-linear-gradient(left, rgba(53,57,60,1) 0%, rgba(63,70,78,1) 49%, rgba(53,57,60,1) 100%);
+  background: -o-linear-gradient(left, rgba(53,57,60,1) 0%, rgba(63,70,78,1) 49%, rgba(53,57,60,1) 100%);
+  background: linear-gradient(90deg, rgba(53,57,60,1) 0%, rgba(63,70,78,1) 49%, rgba(53,57,60,1) 100%);
   border-radius: 10% 10% 15% 15% / 0% 0% 35% 35%;
-  -moz-box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.3);
-  -khtml-box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.3);
-  box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.3);
-
+          box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.3);
 }
 
 .phone-speaker {
   position: absolute;
   top: 11%;
   left: 42.5%;
-  background: black;
   height: 1%;
   width: 15%;
+  background: #000000;
 }
 
 .phone-infobar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row nowrap;
+          flex-flow: row nowrap;
   position: absolute;
   top: 16%;
   left: 18.5%;
-  display: flex;
-  flex-flow: row nowrap;
-  width: 127px;
   height: 19px;
+  width: 127px;
   background: #74786C;
-  font-size: 10px;
   border: 1px solid black;
   border-bottom: dashed;
-  box-sizing: border-box;
-  text-align: right;
   padding-right: 5px;
   font-family: 'Dhurjati', sans-serif;
   font-size: 14px;
   line-height: 12px;
+  text-align: right;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
-.phone-clock {
-  flex: 1;
+.phone-clock, .phone-score {
+  -webkit-box-flex:1;
+          -ms-flex:1;
+              flex:1;
+}
+
+.phone-score {
+  background: #74786C;
+  padding-left: 5px;
+  font-size: 14px;
+  text-align: left;
 }
 
 .phone-screen-border {
   height: 240px;
   width: 170px;
-  margin: 4px auto;
-  border: 5px solid #CBC7BF;
   background: rgb(190,187,181);
+  background: -webkit-linear-gradient(left, rgba(190,187,181,1) 0%, rgba(255,251,242,1) 50%, rgba(203,199,191,1) 100%);
+  background: -o-linear-gradient(left, rgba(190,187,181,1) 0%, rgba(255,251,242,1) 50%, rgba(203,199,191,1) 100%);
   background: linear-gradient(90deg, rgba(190,187,181,1) 0%, rgba(255,251,242,1) 50%, rgba(203,199,191,1) 100%);
+  border: 5px solid #CBC7BF;
   border-radius: 20% 20% 45% 45% / 22% 22% 23% 23%;
+  margin: 4px auto;
 }
 
 .phone-controls {
-  height: 11%;
-  width: 64%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   position: absolute;
   top: 78%;
   left: 18.5%;
+  height: 11%;
+  width: 64%;
   border-radius: 0% 0% 45% 45% / 22% 22% 55% 55%;
-  display: flex;
 }
 
 .phone-control-button {
-  flex: 1;
-  border-radius: 0% 0% 0% 45% / 22% 22% 55% 55%;
-  border: 1px solid black;
-  box-sizing: border-box;
-  line-height: 25px;
+  -webkit-box-flex:1;
+          -ms-flex:1;
+              flex:1;
   background: rgb(226,231,222);
+  background: -webkit-linear-gradient(top, rgba(226,231,222,1) 0%, rgba(186,190,182,1) 20%, rgba(133,135,135,1) 100%);
+  background: -o-linear-gradient(top, rgba(226,231,222,1) 0%, rgba(186,190,182,1) 20%, rgba(133,135,135,1) 100%);
   background: linear-gradient(180deg, rgba(226,231,222,1) 0%, rgba(186,190,182,1) 20%, rgba(133,135,135,1) 100%);
+  border: 1px solid black;
+  border-radius: 0% 0% 0% 45% / 22% 22% 55% 55%;
+  line-height: 25px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
-
+/* Reverse the curve on right button (reset btn)*/
 .phone-control-button:nth-child(2) {
-  border-radius: 0% 0% 44% 0% / 22% 22% 55% 55%;
+  border-radius: 0% 0% 45% 0% / 22% 22% 55% 55%;
 }
 
 .phone-buttons {
-  height: 80%;
-  width: 80%;
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+          -ms-flex-flow: row wrap;
+              flex-flow: row wrap;
+  -ms-flex-pack: distribute;
+    justify-content: space-around;
+  -webkit-box-align: center;
+     -ms-flex-align: center;
+        align-items: center;
   position: absolute;
   top:2%;
   left: 10%;
-  display:flex;
-  flex-flow: row wrap;
-  justify-content: space-around;
-  align-items: center;
+  height: 80%;
+  width: 80%;
 }
 
 .phone-button {
-  flex: 0 0 30%;
-  border: 1px solid black;
-  border-radius: 49% 51% 51% 49% / 35% 34% 66% 65%;
+  -webkit-box-flex: 0;
+          -ms-flex: 0 0 30%;
+              flex: 0 0 30%;
+  height: 20px;
   background: #A8ADA5;
   color: #191B18;
-  height: 20px;
+  border: 1px solid black;
+  border-radius: 49% 51% 51% 49% / 35% 34% 66% 65%;
   -webkit-box-shadow: 0px 0px 2px 2px rgba(96,97,105,1);
-  -moz-box-shadow: 0px 0px 2px 2px rgba(96,97,105,1);
-  box-shadow: 0px 0px 2px 2px rgba(96,97,105,1);
-
+     -moz-box-shadow: 0px 0px 2px 2px rgba(96,97,105,1);
+          box-shadow: 0px 0px 2px 2px rgba(96,97,105,1);
 }
 
-[data-value='1'], [data-value='4'], [data-value='7'], [data-value='*']{
-  transform: rotate(10deg);
+.button-side-data{
+  font-size: 8px;
+}
+
+/** Apply styling directly to phone buttons only (not inner spans) while still allowing all to trigger clickhandler **/
+[number='1'], [number='4'], [number='7'], [number='*']{
+  -webkit-transform: rotate(10deg);
+      -ms-transform: rotate(10deg);
+          transform: rotate(10deg);
   background: rgb(226,231,222);
+  background: -webkit-linear-gradient(left, rgba(226,231,222,1) 2%, rgba(186,190,182,1) 16%, rgba(133,135,135,1) 100%);
+  background: -o-linear-gradient(left, rgba(226,231,222,1) 2%, rgba(186,190,182,1) 16%, rgba(133,135,135,1) 100%);
   background: linear-gradient(90deg, rgba(226,231,222,1) 2%, rgba(186,190,182,1) 16%, rgba(133,135,135,1) 100%);
 }
 
-[data-value='3'], [data-value='6'], [data-value='9'], [data-value='#']{
-  transform: rotate(-10deg);
+[number='3'], [number='6'], [number='9'], [number='#']{
+  -webkit-transform: rotate(-10deg);
+      -ms-transform: rotate(-10deg);
+          transform: rotate(-10deg);
   background: rgb(133,135,135);
+  background: -webkit-linear-gradient(left, rgba(133,135,135,1) 0%, rgba(186,190,182,1) 84%, rgba(226,231,222,1) 98%);
+  background: -o-linear-gradient(left, rgba(133,135,135,1) 0%, rgba(186,190,182,1) 84%, rgba(226,231,222,1) 98%);
   background: linear-gradient(90deg, rgba(133,135,135,1) 0%, rgba(186,190,182,1) 84%, rgba(226,231,222,1) 98%);
 }
 
-[data-value='2'], [data-value='5'], [data-value='8'], [data-value='0']{
-  transform: translate(0px, 5px);
+[number='2'], [number='5'], [number='8'], [number='0']{
+  -webkit-transform: translate(0px, 5px);
+      -ms-transform: translate(0px, 5px);
+          transform: translate(0px, 5px);
   background: rgb(226,231,222);
+  background: -webkit-linear-gradient(top, rgba(226,231,222,1) 0%, rgba(186,190,182,1) 20%, rgba(133,135,135,1) 100%);
+  background: -o-linear-gradient(top, rgba(226,231,222,1) 0%, rgba(186,190,182,1) 20%, rgba(133,135,135,1) 100%);
   background: linear-gradient(180deg, rgba(226,231,222,1) 0%, rgba(186,190,182,1) 20%, rgba(133,135,135,1) 100%);
-}
-
-.side-data{
-  font-size: 8px;
 }

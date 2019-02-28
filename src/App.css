@@ -1,17 +1,26 @@
 body{
   background: #DAE2F8;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(to left, #D6A4A4, #DAE2F8);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to left, #D6A4A4, #DAE2F8); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: -webkit-linear-gradient(to left, #D6A4A4, #DAE2F8);
+  background: -webkit-linear-gradient(right, #D6A4A4, #DAE2F8);
+  background: -o-linear-gradient(right, #D6A4A4, #DAE2F8);
+  background: linear-gradient(to left, #D6A4A4, #DAE2F8);
   font-size: 14px;
   min-width: 100vw;
 }
 
 .App {
-  text-align: center;
   min-width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-flow: column nowrap;
-  align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column nowrap;
+          flex-flow: column nowrap;
+  -webkit-box-align: center;
+     -ms-flex-align: center;
+        align-items: center;
+  text-align: center;
 }
 
 .cell {
@@ -21,60 +30,20 @@ body{
   margin: 0;
 }
 
-.infoText{
-  background-color: white;
-  width: 310px;
-  margin: 10px auto 20px;
-  padding: 5px;
-  border-radius: 5px;
-}
-
 .grid{
-  width: 125px;
   position: absolute;
   top: 23%;
   left:18.5%;
+  width: 125px;
+  background: #74786C;
   border: 1px solid black;
   border-top: none;
-  background: #74786C;
-}
-
-.score{
-  background: #74786C;
-  font-size: 10px;
-  padding-left: 5px;
-  flex:1;
-  text-align: left;
-  font-size: 14px;
-}
-
-.simple-keyboard{
-  margin: 0 auto !important;
-  width: 250px !important;
-}
-
-.hg-button{
-  margin: 0 auto;
-  font-size: 14px;
 }
 
 [data-value="empty"]{
   background-color: #74786C;
 }
 
-[data-value="snake"]{
+[data-value="snake"], [data-value="food"]{
   background: #272A23;
-}
-
-[data-value="food"]{
-  background: #272A23;
-}
-
-@media (max-width:668px){
-  .App{
-    font-size: 12px;
-  }
-  .infoText{
-    width: 295px;
-  }
 }
