@@ -7,7 +7,6 @@ import Score from './Score';
 import Clock from './Clock';
 import PhoneButton from "./PhoneButton";
 
-
 //constants
 const EMPTY = "empty";
 const SNAKE = "snake";
@@ -20,7 +19,7 @@ const RIGHT = "right";
 class App extends Component {
   state = {
     gameBoard: [],
-    directionQueue: [RIGHT],
+    directionQueue: [RIGHT], // game begins with snake facing right
     snakePosition: [],
     score: 0,
     gameRunning: false,
@@ -45,24 +44,25 @@ class App extends Component {
     this.setUpBoard()
   }
 
-  // Handler for
+  // Handler for phone keypad
   onButtonClick = button => {
       let e = new Event('keydown');
+      // ensures click triggers anywhere within the button or its children
       let pressed = button.target.nodeName === "SPAN" ?
                     button.target.parentElement.dataset.value :
                     button.target.dataset.value
       let keyCode;
       switch(pressed) {
-        case '4':
+        case '4': // LEFT
             keyCode = 37
             break;
-        case '6':
+        case '6': // RIGHT
             keyCode = 39
             break;
-        case '2':
+        case '2': // UP
             keyCode = 38
             break;
-        case '8':
+        case '8': // DOWN
             keyCode = 40
             break;
         default:
@@ -77,12 +77,10 @@ class App extends Component {
   componentWillUnmount(){
     window.removeEventListener('keydown', this.handleKeyDown);
     clearInterval(this.timerID);
-    clearInterval(this.delayTimer);
   }
 
   reset = () => {
     clearInterval(this.timerID);
-    clearInterval(this.delayTimer);
     this.setState({
       gameBoard: [],
       directionQueue: [RIGHT],
@@ -97,41 +95,31 @@ class App extends Component {
   setUpBoard = () => {
     let gameBoard =[];
     let rows = [];
-    //loop for height
-    for (let i = 0; i < 26; i++){
-      //loop for width
-      for (let n = 0; n < 25; n++){
-        // put n number of items in an array
+
+    for (let i = 0; i < 26; i++){   // grid height
+      for (let n = 0; n < 25; n++){ // grid width
         rows.push(EMPTY);
       }
-      // then push that array (row) to the main board
       gameBoard.push(rows)
-      // empty the row and start again for the next n row
-      rows = []
-
+      rows = [] // clear to start next row
     }
     this.setState({
       gameBoard: gameBoard,
     }, () =>{
       this.placeStartingSnake()
     })
-
   }
 
   placeStartingSnake = () => {
-    //copy the current state gameBoard
     let gameBoard = [...this.state.gameBoard]
-    let centralCell = 12;
     let snakePosition = [];
+    let centralCell = 12;
     let snakeStartingLength = 5;
-    //starting from central cell (column 12) running snakeLen times
+    // from central cell, running snakeLength times
     for (let i = centralCell; i > (centralCell - snakeStartingLength); i--){
-      //set cell value to "snake"
       gameBoard[13][i] = SNAKE;
-      // add that cell to the snakes position array to be updated in state
       snakePosition.push([13, i])
     }
-
     this.setState({
       gameBoard: gameBoard,
       snakePosition: snakePosition,
@@ -139,23 +127,18 @@ class App extends Component {
   }
 
   placeFood = () => {
-    //choose a random spot on the gameBoard
     let gameBoard = [...this.state.gameBoard]
     let availableCells = [];
-
-    //forEach of the rows, columns
+    // Generate array of currently empty cells
     gameBoard.forEach((row,r) => {
       row.forEach((col, c) => {
-        //if row/col is empty
-        if (col === "empty"){
-          //push to a new array as [row,col]
-          availableCells.push([r,c])
+        if (col === EMPTY){
+          availableCells.push([r,c]) // row index, col index
         }
       })
     })
-    //choose a random array from the new array
+    // Select random available cell and place food
     const randomCell = availableCells[Math.floor(Math.random()*availableCells.length)];
-    //and set that row/col in the gameboard as food
     gameBoard[randomCell[0]][randomCell[1]] = FOOD;
 
     this.setState({
@@ -165,24 +148,20 @@ class App extends Component {
 
   validMove = (row, col) => {
     // if the move is within board boundary
-    if(row >= 0 && row < 26 && col >=0 && col <25){
-      return true;
-    }
-    // if returning false, player has run into wall
-    return false;
+    return (row >= 0 && row < 26 && col >=0 && col <25) ?
+           true :
+           false;
   }
 
   handleKeyDown = (e) => {
-    console.log(e)
-    // 32 is spacebar
-    if (!this.state.gameRunning && e.keyCode === 32){
-      this.startGame()
+    if (!this.state.gameRunning && e.keyCode === 32){ // 32 is spacebar
+      this.startGame();
     }
     if(this.state.gameRunning){
       e.preventDefault();
       let queue = [...this.state.directionQueue]
       let direction;
-      //take direction entered and add it to queue
+      // add entered direction to queue
       switch(e.keyCode) {
         case 37:
         case 65:
@@ -212,21 +191,20 @@ class App extends Component {
   }
 
   traverseDirectionQueue = () => {
-    let queue = [...this.state.directionQueue]
+    let queue = [...this.state.directionQueue];
     if (queue.length > 1){
-      // prevent user changing direction on the same axis they are currently on
-      let horizontal = [LEFT, RIGHT]
-      let vertical = [UP, DOWN]
+      let horizontal = [LEFT, RIGHT];
+      let vertical = [UP, DOWN];
       // if new direction is horizontal and so is the current (same for vertical)
       if (
         (horizontal.includes(queue[0]) && horizontal.includes(queue[1])) ||
         (vertical.includes(queue[0]) && vertical.includes(queue[1]))
       ){
         // remove the new input to reset direction to whatever it was previously
-        queue.pop()
+        queue.pop();
       } else {
-        // if new move valid, remove the first item, so new input is now first
-        queue.shift()
+        // remove previous head of queue
+        queue.shift();
       }
     }
     this.setState({
@@ -237,89 +215,74 @@ class App extends Component {
   collidedWithSelf = (row, col) => {
     let gameBoard = [...this.state.gameBoard];
     if (gameBoard[row][col] === SNAKE){
-      this.playerHasDied()
-      return true
+      this.playerHasDied();
+      return true;
     }
-    return false
+    return false;
   }
 
   playerHasDied = () => {
     clearInterval(this.timerID);
-    clearInterval(this.delayTimer);
     this.setState({
       gameRunning: false,
     })
-    alert(`You died! Score: ${this.state.score}`)
-    this.reset()
+    alert(`You died! Score: ${this.state.score}`);
+    this.reset();
   }
 
   moveSnake = () => {
-    // update the direction before moving snake
-    this.traverseDirectionQueue()
-    // get array of current snake positions
+    this.traverseDirectionQueue(); // update direction
     let snakePosition = [...this.state.snakePosition];
-    // get position of head
-    let snakeHeadRow = snakePosition[0][0]
-    let snakeHeadCol = snakePosition[0][1]
-    // make empty array to store the snakes new position after successful move
+    // get position of snake head
+    let snakeHeadRow = snakePosition[0][0];
+    let snakeHeadCol = snakePosition[0][1];
     let snakeNextPosition = [];
-    // decide which array index of the snake needs incrememnting dependent on direction
+
     switch(this.state.directionQueue[0]) {
-      case "right":
-          snakeNextPosition = [snakeHeadRow, snakeHeadCol+1]
+      case RIGHT:
+          snakeNextPosition = [snakeHeadRow, snakeHeadCol+1];
           break;
-      case "left":
-          snakeNextPosition = [snakeHeadRow, snakeHeadCol-1]
+      case LEFT:
+          snakeNextPosition = [snakeHeadRow, snakeHeadCol-1];
           break;
-      case "up":
-          snakeNextPosition = [snakeHeadRow-1, snakeHeadCol]
+      case UP:
+          snakeNextPosition = [snakeHeadRow-1, snakeHeadCol];
           break;
-      case "down":
-          snakeNextPosition = [snakeHeadRow+1, snakeHeadCol]
+      case DOWN:
+          snakeNextPosition = [snakeHeadRow+1, snakeHeadCol];
           break;
       default:
-          snakeNextPosition = [snakeHeadRow, snakeHeadCol]
+          snakeNextPosition = [snakeHeadRow, snakeHeadCol];
     }
     let gameBoard = [...this.state.gameBoard];
 
-    // if the snakes new head position is valid
-    if (this.validMove(snakeNextPosition[0], snakeNextPosition[1])){
-      //if snake not eating delete the tail,
-      //otherwise keep it so snake grows while still moving forwards
+    // if hitting a wall
+    if (!this.validMove(snakeNextPosition[0], snakeNextPosition[1])){
+      return this.playerHasDied();
+    } else {
+      // if not eating
       if (gameBoard[snakeNextPosition[0]][snakeNextPosition[1]] !== FOOD){
-        //delete the tail
-        let snakeTail = snakePosition.pop()
-        // set the previous tail position on the board to empty
+        let snakeTail = snakePosition.pop(); // delete the tail
         gameBoard[snakeTail[0]][snakeTail[1]] = EMPTY;
       } else {
-        //place food if snake eats current food
-        this.placeFood()
-        //add 1 to score
+        this.placeFood();
         this.setState({
           score: this.state.score + 1,
         })
       }
-      //then add the new head to the front
-      snakePosition.unshift(snakeNextPosition)
-      //check if snake has run into itself
-      if(this.collidedWithSelf(snakeNextPosition[0], snakeNextPosition[1])){
-        //stop executing rest of function if player has self collided
-        return;
-      }
 
-      // loop through snake array
-      snakePosition.forEach((position, i) => {
-        //and update equivalent positions on the gameBoard
+      snakePosition.unshift(snakeNextPosition); // add new snake head
+      // check for collision
+      if (this.collidedWithSelf(snakeNextPosition[0], snakeNextPosition[1])) return;
+
+      snakePosition.forEach((position, i) => { // update gameBoard with new snake
         gameBoard[position[0]][position[1]] = SNAKE;
       })
-      // update the snakePosition, gameBoard then availableCells states with the new values
+
       this.setState({
         snakePosition: snakePosition,
         gameBoard: gameBoard,
       })
-    } else {
-      // if move was invalid
-      return this.playerHasDied()
     }
   }
 
@@ -329,9 +292,9 @@ class App extends Component {
         gameRunning: true,
       })
       this.placeFood();
-      this.timerID = setInterval(() => {
-        this.moveSnake()
-      }, 100)
+      this.timerID = setInterval(() => { // start timer that moves snake
+        this.moveSnake();
+      }, 100);
     }
   }
 

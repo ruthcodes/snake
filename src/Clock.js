@@ -25,7 +25,7 @@ class Clock extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState){
-    // only re-render if time hour/minute changes
+    // only re-render if hour/minute changes
     return nextState.hour === this.state.hour &&
            nextState.minutes === this.state.minutes ?
            false :
