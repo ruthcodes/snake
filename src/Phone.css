@@ -48,13 +48,36 @@
 
 .phone-speaker {
   position: absolute;
-  top: 10%;
+  top: 11%;
   left: 42.5%;
   background: black;
   height: 1%;
   width: 15%;
 }
 
+.phone-infobar {
+  position: absolute;
+  top: 16%;
+  left: 18.5%;
+  display: flex;
+  flex-flow: row nowrap;
+  width: 127px;
+  height: 19px;
+  background: #74786C;
+  font-size: 10px;
+  border: 1px solid black;
+  border-bottom: dashed;
+  box-sizing: border-box;
+  text-align: right;
+  padding-right: 5px;
+  font-family: 'Dhurjati', sans-serif;
+  font-size: 14px;
+  line-height: 12px;
+}
+
+.phone-clock {
+  flex: 1;
+}
 
 .phone-screen-border {
   height: 240px;

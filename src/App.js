@@ -4,6 +4,7 @@ import './Phone.css';
 
 import Grid from "./Grid"
 import Score from './Score';
+import Clock from './Clock';
 import PhoneButton from "./PhoneButton"
 
 
@@ -346,6 +347,10 @@ class App extends Component {
             <div className="phone-top">
               <div className="phone-screen-border">
                 <div className="phone-speaker"></div>
+                <div className="phone-infobar">
+                  <Score score={this.state.score}/>
+                  <Clock />
+                </div>
                 <Grid gameBoard={this.state.gameBoard}/>
                 <div className="phone-controls">
                   <div className="phone-control-button" onClick={this.startGame}>Start</div>

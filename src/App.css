@@ -30,26 +30,22 @@ body{
 }
 
 .grid{
-  width: 137.5px;
+  width: 125px;
   position: absolute;
-  top: 20%;
-  left:16%;
+  top: 23%;
+  left:18.5%;
   border: 1px solid black;
-}
-
-.buttonControls{
-  padding: 10px;
-  border-radius: 5px;
-  background: linear-gradient(#7290AC 0%, #5e81a1 100%) !important;
-  width: 127px;
+  border-top: none;
+  background: #74786C;
 }
 
 .score{
-  background-color: white;
-  color: black;
-  width: 252px;
-  padding: 10px 0px;
-  border-radius: 5px;
+  background: #74786C;
+  font-size: 10px;
+  padding-left: 5px;
+  flex:1;
+  text-align: left;
+  font-size: 14px;
 }
 
 .simple-keyboard{
@@ -78,10 +74,6 @@ body{
   .App{
     font-size: 12px;
   }
-  .score{
-    margin-top:15px;
-  }
-
   .infoText{
     width: 295px;
   }
