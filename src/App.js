@@ -344,7 +344,9 @@ class App extends Component {
           <Modal open={open} onClose={this.onCloseModal} center>
             <h2>Controls</h2>
             <p>If you have a keyboard, the WASD or arrow keys can be used to control the snake.</p>
-            <p>Press the spacebar or start button to begin.</p>
+            <p>If not, you can use the 2,4,6,8 keys on the on-screen phone's numberpad.</p>
+            <br/>
+            <p>Press the spacebar or start button to begin!</p>
           </Modal>
         </div>
       </div>
