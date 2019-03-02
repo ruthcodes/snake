@@ -130,6 +130,7 @@
   line-height: 25px;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+  cursor: pointer;
 }
 /* Reverse the curve on right button (reset btn)*/
 .phone-control-button:nth-child(2) {
@@ -168,6 +169,7 @@
   -webkit-box-shadow: 0px 0px 2px 2px rgba(96,97,105,1);
      -moz-box-shadow: 0px 0px 2px 2px rgba(96,97,105,1);
           box-shadow: 0px 0px 2px 2px rgba(96,97,105,1);
+  cursor: pointer;
 }
 
 .button-side-data{
