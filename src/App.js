@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './App.css';
 import './Phone.css';
 
-
 import Grid from "./Grid";
 import Score from './Score';
 import Clock from './Clock';
@@ -42,11 +41,6 @@ class App extends Component {
     open: false,
   }
 
-  componentDidMount(){
-    window.addEventListener('keydown', this.handleKeyDown);
-    this.setUpBoard()
-  }
-
   onOpenModal = () => {
     this.setState({ open: true });
   };
@@ -55,53 +49,15 @@ class App extends Component {
     this.setState({ open: false });
   };
 
-  // Handler for phone keypad
-  onButtonClick = button => {
-      let e = new CustomEvent('keydown');
-      // ensures click triggers anywhere within the button or its children
-      let pressed = button.target.nodeName === "SPAN" ?
-                    button.target.parentElement.dataset.value :
-                    button.target.dataset.value
-      let keyCode;
-      switch(pressed) {
-        case '4': // LEFT
-            keyCode = 37
-            break;
-        case '6': // RIGHT
-            keyCode = 39
-            break;
-        case '2': // UP
-            keyCode = 38
-            break;
-        case '8': // DOWN
-            keyCode = 40
-            break;
-        default:
-          keyCode = null;
-      }
-      if (keyCode) {
-        e.keyCode = keyCode;
-        this.handleKeyDown(e);
-      }
+  componentDidMount(){
+    this.setUpBoard();
+    window.addEventListener('keydown', this.handleKeyDown);
   }
 
   componentWillUnmount(){
     window.removeEventListener('keydown', this.handleKeyDown);
     clearInterval(this.timerID);
   }
-
-  reset = () => {
-    clearInterval(this.timerID);
-    this.setState({
-      gameBoard: [],
-      directionQueue: [RIGHT],
-      snakePosition: [],
-      score: 0,
-      gameRunning: false,
-    })
-    this.setUpBoard()
-  }
-
 
   setUpBoard = () => {
     let gameBoard =[];
@@ -135,33 +91,6 @@ class App extends Component {
       gameBoard: gameBoard,
       snakePosition: snakePosition,
     })
-  }
-
-  placeFood = () => {
-    let gameBoard = [...this.state.gameBoard]
-    let availableCells = [];
-    // Generate array of currently empty cells
-    gameBoard.forEach((row,r) => {
-      row.forEach((col, c) => {
-        if (col === EMPTY){
-          availableCells.push([r,c]) // row index, col index
-        }
-      })
-    })
-    // Select random available cell and place food
-    const randomCell = availableCells[Math.floor(Math.random()*availableCells.length)];
-    gameBoard[randomCell[0]][randomCell[1]] = FOOD;
-
-    this.setState({
-      gameBoard: gameBoard,
-    })
-  }
-
-  validMove = (row, col) => {
-    // if the move is within board boundary
-    return (row >= 0 && row < 26 && col >=0 && col <25) ?
-           true :
-           false;
   }
 
   handleKeyDown = (e) => {
@@ -201,44 +130,66 @@ class App extends Component {
     }
   }
 
-  traverseDirectionQueue = () => {
-    let queue = [...this.state.directionQueue];
-    if (queue.length > 1){
-      let horizontal = [LEFT, RIGHT];
-      let vertical = [UP, DOWN];
-      // if new direction is horizontal and so is the current (same for vertical)
-      if (
-        (horizontal.includes(queue[0]) && horizontal.includes(queue[1])) ||
-        (vertical.includes(queue[0]) && vertical.includes(queue[1]))
-      ){
-        // remove the new input to reset direction to whatever it was previously
-        queue.pop();
-      } else {
-        // remove previous head of queue
-        queue.shift();
+  // Handler for phone keypad
+  onButtonClick = button => {
+      let e = new CustomEvent('keydown');
+      // ensures click triggers anywhere within the button or its children
+      let pressed = button.target.nodeName === "SPAN" ?
+                    button.target.parentElement.dataset.value :
+                    button.target.dataset.value
+      let keyCode;
+      switch(pressed) {
+        case '4': // LEFT
+            keyCode = 37
+            break;
+        case '6': // RIGHT
+            keyCode = 39
+            break;
+        case '2': // UP
+            keyCode = 38
+            break;
+        case '8': // DOWN
+            keyCode = 40
+            break;
+        default:
+          keyCode = null;
       }
-    }
-    this.setState({
-      directionQueue: queue,
-    })
+      if (keyCode) {
+        e.keyCode = keyCode;
+        this.handleKeyDown(e);
+      }
   }
 
-  collidedWithSelf = (row, col) => {
-    let gameBoard = [...this.state.gameBoard];
-    if (gameBoard[row][col] === SNAKE){
-      this.playerHasDied();
-      return true;
+  startGame = () => {
+    if(!this.state.gameRunning){
+      this.setState({
+        gameRunning: true,
+      })
+      this.placeFood();
+      this.timerID = setInterval(() => { // start timer that moves snake
+        this.moveSnake();
+      }, 100);
     }
-    return false;
   }
 
-  playerHasDied = () => {
-    clearInterval(this.timerID);
-    this.setState({
-      gameRunning: false,
+  placeFood = () => {
+    let gameBoard = [...this.state.gameBoard]
+    let availableCells = [];
+    // Generate array of currently empty cells
+    gameBoard.forEach((row,r) => {
+      row.forEach((col, c) => {
+        if (col === EMPTY){
+          availableCells.push([r,c]) // row index, col index
+        }
+      })
     })
-    alert(`You died! Score: ${this.state.score}`);
-    this.reset();
+    // Select random available cell and place food
+    const randomCell = availableCells[Math.floor(Math.random()*availableCells.length)];
+    gameBoard[randomCell[0]][randomCell[1]] = FOOD;
+
+    this.setState({
+      gameBoard: gameBoard,
+    })
   }
 
   moveSnake = () => {
@@ -297,16 +248,63 @@ class App extends Component {
     }
   }
 
-  startGame = () => {
-    if(!this.state.gameRunning){
-      this.setState({
-        gameRunning: true,
-      })
-      this.placeFood();
-      this.timerID = setInterval(() => { // start timer that moves snake
-        this.moveSnake();
-      }, 100);
+  validMove = (row, col) => {
+    // if the move is within board boundary
+    return (row >= 0 && row < 26 && col >=0 && col <25) ?
+           true :
+           false;
+  }
+
+  playerHasDied = () => {
+    clearInterval(this.timerID);
+    this.setState({
+      gameRunning: false,
+    })
+    alert(`You died! Score: ${this.state.score}`);
+    this.reset();
+  }
+
+  reset = () => {
+    clearInterval(this.timerID);
+    this.setState({
+      gameBoard: [],
+      directionQueue: [RIGHT],
+      snakePosition: [],
+      score: 0,
+      gameRunning: false,
+    })
+    this.setUpBoard();
+  }
+
+  collidedWithSelf = (row, col) => {
+    let gameBoard = [...this.state.gameBoard];
+    if (gameBoard[row][col] === SNAKE){
+      this.playerHasDied();
+      return true;
     }
+    return false;
+  }
+
+  traverseDirectionQueue = () => {
+    let queue = [...this.state.directionQueue];
+    if (queue.length > 1){
+      let horizontal = [LEFT, RIGHT];
+      let vertical = [UP, DOWN];
+      // if new direction is horizontal and so is the current (same for vertical)
+      if (
+        (horizontal.includes(queue[0]) && horizontal.includes(queue[1])) ||
+        (vertical.includes(queue[0]) && vertical.includes(queue[1]))
+      ){
+        // remove the new input to reset direction to whatever it was previously
+        queue.pop();
+      } else {
+        // remove previous head of queue
+        queue.shift();
+      }
+    }
+    this.setState({
+      directionQueue: queue,
+    })
   }
 
   render() {
